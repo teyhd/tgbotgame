@@ -40,6 +40,12 @@ async function get_user_dgid(tgid){
     console.dir(rows.length)
     return rows;
 }
+async function get_user_info(tgid){
+    const qer = `SELECT * from users WHERE tgid=${tgid}`
+    const [rows, fields] = await pool.query(qer)
+    console.dir(rows.length)
+    return rows;
+}
 async function add_user(tgid){
     const qer = `INSERT INTO users (tgid,dgid,name,ship,coun,attr) VALUES (${tgid},0,${random.int(0, 25)},${random.int(0, 19)},${random.int(0, 19)},${random.int(0, 19)});`
     const [rows, fields] = await pool.query(qer)
@@ -47,6 +53,11 @@ async function add_user(tgid){
     return rows.insertId;
 }
 
+async function set_dgid(dgid,tgid){
+    const qer = `UPDATE users SET dgid=${dgid} WHERE tgid=${tgid};`    
+    const [rows, fields] = await pool.query(qer)
+    return rows;
+}
 
 bot.on('message',async (msg) => {
     const chatId = msg.chat.id;
@@ -59,18 +70,23 @@ bot.on('message',async (msg) => {
 
     await ans_render(userinf[0],msg)
 
-    console.dir(msg);
+  //  console.dir(msg);
     
-    bot.sendMessage(304622290, `${msg.chat.id} написал сообщение\n ${msg.text}`);
+   // bot.sendMessage(304622290, `${msg.chat.id} написал сообщение\n ${msg.text}`);
    
   });
 
-bot.on('callback_query', function (msg) {
-console.dir(msg)
-
+bot.on('callback_query',async (msg) => {
+    msg.chat = {id:0}
+    msg.chat.id = msg.message.chat.id
+   // console.log();
+    await set_dgid(msg.data,msg.message.chat.id)
+    var userinf = await get_user_info(msg.message.chat.id);
+    console.log(userinf);
+    await ans_render(userinf[0],msg)
 });
 
-get_info('coun',2)
+//get_info('coun',2)
 
 
 function get_info(arrname,id) {
@@ -79,7 +95,7 @@ function get_info(arrname,id) {
         ship:["Королевская удача","Приключенческая галера","Свобода","Габриэль","Рейнджер","Артемида","Изысканный","Золотая лань","Счастливое приключение","Нью-Йоркская месть","Месть королевы Анны","Робак","Бригантина","Драккар","Галеон","Каравелла","Фрегат","Варшип","Каракка","Шхуна","Корвет"],
         coun:["Норвегия","Португалия","Китай","Великобритания","Италия","Испания","Франция","Голландия","Дания","Чили","Филиппины","Грузия","Россия","Румыния","Турция","Абхазия","Болгария","Сальвадор","Сомали","Шри-Ланка"],
         attr:["Кинжал","Крюк","Счастливый череп","Золото","Флаг","Деревянная нога","Пушка","Сабля","Сундук","Золотые монеты","Бочка","Компас","Бандана","Треуголка","Звездная карта","Попугай","Подзорная труба","Обезьянка","Повязка на глаз","Револьвер"],
-        nikss:["Джонс","Джек Воробей","Блэк","Литтл","Уайт","Грин","Рэд","Адамс","Одли","Остин","Бейкер","Байер","Белл","Бенсон","Картер","Кларк","Дэвис","Дин","Роуз","Стюарт","Эдисон","Эванс","Поттер","Фрай","Гиббс","Гилмор","Джексон"]
+        niks:["Джонс","Джек Воробей","Блэк","Литтл","Уайт","Грин","Рэд","Адамс","Одли","Остин","Бейкер","Байер","Белл","Бенсон","Картер","Кларк","Дэвис","Дин","Роуз","Стюарт","Эдисон","Эванс","Поттер","Фрай","Гиббс","Гилмор","Джексон"]
     }
     //console.log(infos.attr.length);
     
@@ -92,24 +108,27 @@ function get_info(arrname,id) {
     return ans
 }
 async function ans_render(userinf,msg){
-    let dialogs = [`Добро пожаловать на борт, Капитан! Я твой верный помощник мистер Ботти и буду помогать тебе во всем! Сегодня тебя ждет захватывающее путешествие в поисках сокровищ! Ты готов выполнить три задания и получить приз, о котором мечтает любой морской волк?`]
+  //  console.log(userinf);
+    let dialogs = [`Добро пожаловать на борт, Капитан! Я твой верный помощник мистер Ботти и буду помогать тебе во всем! Сегодня тебя ждет захватывающее путешествие в поисках сокровищ! Ты готов выполнить три задания и получить приз, о котором мечтает любой морской волк?`,
+    `Отлично! Отныне твое имя Капитан ${get_info('niks',userinf.name)}! Перед отправкой запомни кое-что очень важное. Другие обитатели морей будут задавать тебе много вопросов, а по морсеому кодексу, отвечать нужно только честно, иначе морской кракен потопит твой корабль. Всем всегда интересны три вещи: откуда ты прибыл, какой у тебя корабль и с каким атрибутом ты никогда не расстаешься. Мы прибыли из ${get_info('coun',userinf.coun)}, на корабле ${get_info('ship',userinf.ship)}, а самый главный атрибут капитана нашего корабля - ${get_info('attr',userinf.attr)}. Запомнил? Если что, я всегда могу напомнить, только попроси меня об этом. КАК???`,
+    ``
+    ]
     let rkeyboard = [
         [[{text:'Да', callback_data:'1'},{'text':'В путь!',callback_data:'1'}]]
     ]
-    var ans = ''
+
     const opts = {
         reply_to_message_id: msg.message_id,
         reply_markup: {
             resize_keyboard: true,
             one_time_keyboard: true,
             inline_keyboard: rkeyboard[userinf.dgid],
-            //      keyboard: [["uno :+1:"],["uno \ud83d\udc4d", "due"],["uno", "due","tre"],["uno", "due","tre","quattro"]]
-        
+            //keyboard: [["uno :+1:"],["uno \ud83d\udc4d", "due"],["uno", "due","tre"],["uno", "due","tre","quattro"]]
         }
     };
-    console.log(userinf);
-    console.log(userinf.dgid);
-    console.log(dialogs[userinf.dgid]);
+    //console.log(userinf);
+    //console.log(userinf.dgid);
+   // console.log(dialogs[userinf.dgid]);
     await bot.sendMessage(msg.chat.id, dialogs[userinf.dgid],opts);
 }
 
