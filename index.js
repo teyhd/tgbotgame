@@ -106,7 +106,6 @@ function get_info(arrname,id) {
 }
 
 
-
 app.listen(PORT, ()=>{
     console.log('Телеграм запущен порт:', PORT)
 })
