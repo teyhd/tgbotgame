@@ -50,38 +50,25 @@ async function add_user(tgid){
 
 bot.on('message',async (msg) => {
     const chatId = msg.chat.id;
-    var dgid = await get_user_dgid(chatId);
-    const opts = {
-        reply_to_message_id: msg.message_id,
-        reply_markup: {
-            resize_keyboard: true,
-            one_time_keyboard: true,
-            inline_keyboard: 
-            [
-                [{'text':'Level 1','callback_data':'/ans1'},{'text':'Level 1','callback_data':'/ans2'}],
-                
-               [ {'text':'Level 1','callback_data':'/ans3'}]
-            ],
-          //      keyboard: [["uno :+1:"],["uno \ud83d\udc4d", "due"],["uno", "due","tre"],["uno", "due","tre","quattro"]]
-       
-        }
-    };
-    if (dgid.length==0) {
+    var userinf = await get_user_dgid(chatId);
+    
+    if (userinf.length==0) {
         await add_user(chatId)
-        dgid = 0
-        bot.sendMessage(chatId, 'Ты новый! Функция живых ответов - в разработке!',opts);
-    } else {
-        bot.sendMessage(chatId, 'Ты не новый! Функция живых ответов - в разработке!',opts);
-    }
-    console.log(dgid);
+        userinf = [{dgid:0}]
+    } 
+
+    await ans_render(userinf[0],msg)
+
     console.dir(msg);
     
     bot.sendMessage(304622290, `${msg.chat.id} написал сообщение\n ${msg.text}`);
    
   });
 
+bot.on('callback_query', function (msg) {
+console.dir(msg)
 
-
+});
 
 get_info('coun',2)
 
@@ -104,7 +91,27 @@ function get_info(arrname,id) {
     }
     return ans
 }
-
+async function ans_render(userinf,msg){
+    let dialogs = [`Добро пожаловать на борт, Капитан! Я твой верный помощник мистер Ботти и буду помогать тебе во всем! Сегодня тебя ждет захватывающее путешествие в поисках сокровищ! Ты готов выполнить три задания и получить приз, о котором мечтает любой морской волк?`]
+    let rkeyboard = [
+        [[{text:'Да', callback_data:'1'},{'text':'В путь!',callback_data:'1'}]]
+    ]
+    var ans = ''
+    const opts = {
+        reply_to_message_id: msg.message_id,
+        reply_markup: {
+            resize_keyboard: true,
+            one_time_keyboard: true,
+            inline_keyboard: rkeyboard[userinf.dgid],
+            //      keyboard: [["uno :+1:"],["uno \ud83d\udc4d", "due"],["uno", "due","tre"],["uno", "due","tre","quattro"]]
+        
+        }
+    };
+    console.log(userinf);
+    console.log(userinf.dgid);
+    console.log(dialogs[userinf.dgid]);
+    await bot.sendMessage(msg.chat.id, dialogs[userinf.dgid],opts);
+}
 
 app.listen(PORT, ()=>{
     console.log('Телеграм запущен порт:', PORT)
