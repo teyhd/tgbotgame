@@ -115,8 +115,22 @@ bot.on('message',async (msg) => {
         await add_user(chatId)
         userinf = [{dgid:0}]
     } 
-    await bot.deleteMessage(msg.chat.id,msg.message_id)
-    await ans_render(userinf[0],msg)
+    switch (msg.text) {
+        case "Кто я?":
+        case "инфо":
+        case "Инфо":
+        case "/me":
+            let dialogs = `Твое имя: Капитан ${get_info('niks',userinf[0].name)},\n\nТвой корабль: ${get_info('ship',userinf[0].ship)},\n\nСтрана: ${get_info('coun',userinf[0].coun)},\n\nАтрибут: ${get_info('attr',userinf[0].attr)}`
+            bot.sendMessage(msg.chat.id, dialogs)
+            break;
+        case "/start":
+            bot.sendMessage(msg.chat.id, "Приятной игры!")
+        default:
+            await bot.deleteMessage(msg.chat.id,msg.message_id)
+            await ans_render(userinf[0],msg)
+            break;
+    }
+
   //  console.dir(msg); 
    // bot.sendMessage(304622290, `${msg.chat.id} написал сообщение\n ${msg.text}`);
 });
@@ -143,12 +157,31 @@ bot.on('callback_query',async (msg) => {
         break;
 
         case 8:
-        //case 7:   
+        case 9:   
             if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
-                await set_dgid(7,msg.chat.id)
-            } else await set_dgid(8,msg.chat.id)
+                await set_dgid(9,msg.chat.id)
+            } else await set_dgid(10,msg.chat.id)
         break;
     
+        case 12:
+        case 13:   
+            if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
+                await set_dgid(13,msg.chat.id)
+            } else await set_dgid(14,msg.chat.id)
+        break;
+
+        case 15:
+        case 16:   
+            if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
+                await set_dgid(16,msg.chat.id)
+            } else await set_dgid(17,msg.chat.id)
+        break;
+        case 18:
+        case 19:   
+            if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
+                await set_dgid(19,msg.chat.id)
+            } else await set_dgid(20,msg.chat.id)
+        break;
         default:
             await set_dgid(msg.data, msg.message.chat.id)
         break;
@@ -199,7 +232,7 @@ async function ans_render(userinf,msg){
             rkeyboard = [[{text:'Да!', callback_data:'1'},{'text':'В путь!',callback_data:'1'}]] 
         break;
         case 1:
-            dialogs = `Отлично!\nОтныне твое имя Капитан *${get_info('niks',userinf.name)}*!\nПеред отправкой запомни кое-что очень важное.\nДругие обитатели морей будут задавать тебе много вопросов,\nа по морсеому кодексу, отвечать нужно только честно,\nиначе морской кракен потопит твой корабль.\n\nВсем всегда интересны три вещи: откуда ты прибыл, какой у тебя корабль и с каким атрибутом ты никогда не расстаешься.\n\nМы прибыли из *${get_info('coun',userinf.coun)}*,\nна корабле *${get_info('ship',userinf.ship)}*,\nа самый главный атрибут капитана нашего корабля - *${get_info('attr',userinf.attr)}*.\n\nЕсли что, я всегда могу напомнить, только попроси меня об этом. \n\nВсе запомнил?`
+            dialogs = `Отлично!\nОтныне твое имя Капитан *${get_info('niks',userinf.name)}*!\nПеред отправкой запомни кое-что очень важное.\nДругие обитатели морей будут задавать тебе много вопросов,\nа по морсеому кодексу, отвечать нужно только честно,\nиначе морской кракен потопит твой корабль.\n\nВсем всегда интересны три вещи: откуда ты прибыл, какой у тебя корабль и с каким атрибутом ты никогда не расстаешься.\n\nМы прибыли из *${get_info('coun',userinf.coun)}*,\nна корабле *${get_info('ship',userinf.ship)}*,\nа самый главный атрибут капитана нашего корабля - *${get_info('attr',userinf.attr)}*.\n\nЕсли что, я всегда могу напомнить, только попроси меня об этом. Напиши в чат /me \n\nВсе запомнил?`
             rkeyboard = [[{text:'Да!', callback_data:'2'}]]  
         break;
         case 2:
@@ -287,6 +320,151 @@ async function ans_render(userinf,msg){
             dialogs = `Задание №3: А теперь узнай из какой страны прибыл Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!\n\n\n*${get_info('coun',(await get_user_info_by_id(userinf.task)).coun)}*`
             rkeyboard = [[{text:get_info('coun',ship[0]), callback_data:ship[0]},{text:get_info('coun',ship[1]),callback_data:ship[1]}],[{text:get_info('coun',ship[2]), callback_data:ship[2]},{text:get_info('coun',ship[3]),callback_data:ship[3]}]] 
             break;
+        case 81:
+            dialogs = `Я нашел Капитана`
+            rkeyboard = [[{text:'Дай его контакты!', callback_data:8}]] 
+        break;       
+        case 9:
+            var anses = (await mng_ans(userinf.tgid,null))[0]
+            var ship = [anses['a1'],anses['a2'],anses['a3'],anses['ans']]
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            if ((await lives(userinf.tgid,null)).lives>0){
+                var nli = (await lives(userinf.tgid,null)).lives -1
+                await lives(userinf.tgid,nli)
+                dialogs = `К сожалению, ты ошибся!\n\nОсталось попыток: ${(await lives(userinf.tgid,null)).lives}\n\nУзнай из какой страны Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.`
+                rkeyboard = [[{text:get_info('coun',ship[0]), callback_data:ship[0]},{text:get_info('coun',ship[1]),callback_data:ship[1]}],[{text:get_info('coun',ship[2]), callback_data:ship[2]},{text:get_info('coun',ship[3]),callback_data:ship[3]}]] 
+            } else {
+                set_task(userinf.tgid);
+                set_dgid(81, userinf.tgid)
+                lives(userinf.tgid,2)
+                dialogs = `К сожалению, это тоже не верно. Видимо, тебе попался несговорчивый Капитан. Но ничего, я нашел еще одного!`
+                rkeyboard = [[{text:'Узнаю у него!', callback_data:81}]] 
+            }
+        break;
+
+        case 10:
+            dialogs = `Ура!\n\nТеперь мы можем пройти в пещеру.\nБлагодаря нашим новым спутникам Хранитель Пещеры впустил нас.\n\nА вот и следующая подсказка координаты долгожданного Острова Сокровищ!`
+            rkeyboard = [[{text:'Поднять паруса!', callback_data:11}]] 
+        break;
+        case 11:
+            dialogs = `Вот мы и на месте.\nИ снова мы тут не одни… Думаю, нам нужно объединиться, чтобы достичь цели.\n\nСмотри, там табличка: "Чтобы получить сокровище, нужно положить на этот камень то, с чем вы никогда не расстаетесь и тогда сокровище будет ваше!\n\nСокровища получат четверо смельчаков!`
+            rkeyboard = [[{text:'Получить задачу!', callback_data:12}]] 
+        break;
+        case 12:
+            set_task(userinf.tgid);
+            var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
+            await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            
+            console.log(ship);
+            dialogs = `Задание №4: Хм… Что ж, значит нам нужно найти еще трех Капитанов у которых есть что-то, с чем они не расстаются никогда…\n\nСпросишь у Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            break;
+        case 121:
+            dialogs = `Я нашел Капитана`
+            rkeyboard = [[{text:'Дай его контакты!', callback_data:12}]] 
+        break;    
+        case 13:
+            var anses = (await mng_ans(userinf.tgid,null))[0]
+            var ship = [anses['a1'],anses['a2'],anses['a3'],anses['ans']]
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            if ((await lives(userinf.tgid,null)).lives>0){
+                var nli = (await lives(userinf.tgid,null)).lives -1
+                await lives(userinf.tgid,nli)
+                dialogs = `К сожалению, ты ошибся!\n\nОсталось попыток: ${(await lives(userinf.tgid,null)).lives}\n\nУзнай незаменимый аттрибут Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.`
+                rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            } else {
+                set_task(userinf.tgid);
+                set_dgid(121, userinf.tgid)
+                lives(userinf.tgid,2)
+                dialogs = `К сожалению, это тоже не верно. Видимо, тебе попался несговорчивый Капитан. Но ничего, я нашел еще одного!`
+                rkeyboard = [[{text:'Узнаю у него!', callback_data:121}]] 
+            }
+        break;
+        case 14:
+            dialogs = `Отлично, один есть!`
+            rkeyboard = [[{text:'Найти следующего!', callback_data:15}]]
+        break;
+        case 15:
+            set_task(userinf.tgid);
+            var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
+            await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            
+            console.log(ship);
+            dialogs = `Задание №5: Я вижу Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nCпросишь теперь у него?\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            break;
+        case 151:
+            dialogs = `Я нашел нового Капитана`
+            rkeyboard = [[{text:'Поделись контактом!', callback_data:15}]] 
+        break; 
+        case 16:
+            var anses = (await mng_ans(userinf.tgid,null))[0]
+            var ship = [anses['a1'],anses['a2'],anses['a3'],anses['ans']]
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            if ((await lives(userinf.tgid,null)).lives>0){
+                var nli = (await lives(userinf.tgid,null)).lives -1
+                await lives(userinf.tgid,nli)
+                dialogs = `К сожалению, ты ошибся!\n\nОсталось попыток: ${(await lives(userinf.tgid,null)).lives}\n\nУзнай незаменимый аттрибут Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.`
+                rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            } else {
+                set_task(userinf.tgid);
+                set_dgid(151, userinf.tgid)
+                lives(userinf.tgid,2)
+                dialogs = `К сожалению, это тоже не верно. Видимо, тебе попался несговорчивый Капитан. Но ничего, я нашел еще одного!`
+                rkeyboard = [[{text:'Узнаю у него!', callback_data:151}]] 
+            }
+        break;        
+        case 17:
+            dialogs = `Осталось последнее задание!`
+            rkeyboard = [[{text:'Приступить!', callback_data:18}]] 
+        break;
+        case 18:
+            set_task(userinf.tgid);
+            var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
+            await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            
+            console.log(ship);
+            dialogs = `Задание №6: О, мой добрый друг Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nОн точно ответит и мы получим сокровища!\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            break;
+        case 181:
+            dialogs = `Я нашел Капитана`
+            rkeyboard = [[{text:'Дай его контакты!', callback_data:18}]] 
+        break; 
+        case 19:
+            var anses = (await mng_ans(userinf.tgid,null))[0]
+            var ship = [anses['a1'],anses['a2'],anses['a3'],anses['ans']]
+            ship = shuffle(ship)
+            ship = shuffle(ship)
+            if ((await lives(userinf.tgid,null)).lives>0){
+                var nli = (await lives(userinf.tgid,null)).lives -1
+                await lives(userinf.tgid,nli)
+                dialogs = `К сожалению, ты ошибся!\n\nОсталось попыток: ${(await lives(userinf.tgid,null)).lives}\n\nУзнай незаменимый аттрибут Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.`
+                rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
+            } else {
+                set_task(userinf.tgid);
+                set_dgid(181, userinf.tgid)
+                lives(userinf.tgid,2)
+                dialogs = `К сожалению, это тоже не верно. Видимо, тебе попался несговорчивый Капитан. Но ничего, я нашел еще одного!`
+                rkeyboard = [[{text:'Узнаю у него!', callback_data:181}]] 
+            }
+        break; 
+        case 20:
+            dialogs = `И вот перед тобой появляется сундучок, ты открываешь и видишь большую, яркую и сверкающую золотую монету!\n\nТаких драгоценностей ты еще не видел никогда в своей жизни.\n\nИ эта первая монета отправится в твою копилку и станет первой в этом учебном году.\n\nПоздравляем! `
+            rkeyboard = [[{text:'Получить монетку!', callback_data:21}]] 
+            break; 
+        case 21:
+            dialogs = `Покажи это сообщение администратору Ольге и ты получишь свою первую монетку в этом учебном году!\n\nА наставники расскажут подробнее, для чего они нужны\n\nСпасибо за игру!!!`
+            break;
         default:
             break;
     }
@@ -296,7 +474,8 @@ async function ans_render(userinf,msg){
         reply_markup: {
             resize_keyboard: true,
             one_time_keyboard: true,
-            inline_keyboard: rkeyboard,
+           // keyboard: [["Кто я?"]],
+            inline_keyboard: rkeyboard
             //keyboard: [["uno :+1:"],["uno \ud83d\udc4d", "due"],["uno", "due","tre"],["uno", "due","tre","quattro"]]
         },
         parse_mode: 'Markdown'
