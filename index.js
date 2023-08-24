@@ -120,7 +120,7 @@ bot.on('message',async (msg) => {
         case "инфо":
         case "Инфо":
         case "/me":
-            let dialogs = `Твое имя: Капитан ${get_info('niks',userinf[0].name)},\n\nТвой корабль: ${get_info('ship',userinf[0].ship)},\n\nСтрана: ${get_info('coun',userinf[0].coun)},\n\nАтрибут: ${get_info('attr',userinf[0].attr)}`
+            let dialogs = `Твое имя: Капитан ${get_info('niks',userinf[0].name)}\nТвой корабль: ${get_info('ship',userinf[0].ship)}\nСтрана: ${get_info('coun',userinf[0].coun)}\nАтрибут: ${get_info('attr',userinf[0].attr)}`
             bot.sendMessage(msg.chat.id, dialogs)
             break;
         case "/start":
@@ -480,12 +480,15 @@ async function ans_render(userinf,msg){
         },
         parse_mode: 'Markdown'
     };
-    //console.log(userinf);
-    //console.log(userinf.dgid);
-    //console.log(dialogs);
+
     console.log(1111111);
     console.log(lastmsg[msg.chat.id]);
-    if (lastmsg[msg.chat.id]!=undefined) await bot.deleteMessage(msg.chat.id,lastmsg[msg.chat.id])
+    try {
+        if (lastmsg[msg.chat.id]!=undefined) await bot.deleteMessage(msg.chat.id,lastmsg[msg.chat.id])
+    } catch (error) {
+        console.log(error);
+    }
+    
     let test = await bot.sendMessage(msg.chat.id, dialogs, opts);
     lastmsg[msg.chat.id] = test.message_id
 }
