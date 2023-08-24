@@ -244,8 +244,8 @@ async function ans_render(userinf,msg){
             rkeyboard = [[{text:'Отлично!', callback_data:6}]]
             break;
         case 61:
-            dialogs = `Я нашел капитана!`
-            rkeyboard = [[{text:'Дай контакты', callback_data:6}]] 
+            dialogs = `Я нашел Капитана`
+            rkeyboard = [[{text:'Дай его контакты!', callback_data:6}]] 
         break;
         case 6:
             set_task(userinf.tgid);
@@ -325,6 +325,3 @@ function get_unic_arr(key){
 app.listen(PORT, ()=>{
     console.log('Телеграм запущен порт:', PORT)
 })
-
-
-
