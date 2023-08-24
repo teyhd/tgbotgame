@@ -107,8 +107,9 @@ async function set_task(tgid){
     return rows;
 }
 var lastmsg = []
+
 bot.on('message',async (msg) => {
-    //console.log(msg.message_id);
+    console.log(msg);
     const chatId = msg.chat.id;
     var userinf = await get_user_info(chatId);
     if (userinf.length==0) {
@@ -125,6 +126,7 @@ bot.on('message',async (msg) => {
             break;
         case "/start":
             bot.sendMessage(msg.chat.id, "Приятной игры!")
+            //bot.sendPhoto(msg.chat.id,"/pic.jpg")
         default:
             await bot.deleteMessage(msg.chat.id,msg.message_id)
             await ans_render(userinf[0],msg)
