@@ -67,6 +67,7 @@ async function add_user(tgid){
     const [rows, fields] = await pool.query(qer);
     console.dir(rows);
     qer = `INSERT INTO tasks (tgid) VALUES (${tgid});`
+    bot.sendMessage(304622290, `Новый пользователь: ${tgid}`);
     const [ans, fans] = await pool.query(qer);
     return rows.insertId;
 }
@@ -470,6 +471,7 @@ async function ans_render(userinf,msg){
             break; 
         case 22:
             dialogs = `Покажи это сообщение администратору Ольге и ты получишь свою первую монетку в этом учебном году!\n\nА наставники расскажут подробнее, для чего они нужны\n\nСпасибо за игру!!!`
+            bot.sendMessage(304622290, `Пользователь: ${msg.from.username}\nПрошел игру!`);
             break;
         default:
             break;
