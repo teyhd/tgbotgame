@@ -150,14 +150,19 @@ bot.on('callback_query',async (msg) => {
         case 4:   
             if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
                 await set_dgid(4,msg.chat.id)
-            } else await set_dgid(5,msg.chat.id)
+            } else {
+                await set_task(msg.chat.id);
+                await set_dgid(5,msg.chat.id)
+            }
         break;
 
         case 6:
         case 7:   
             if (msg.data!=(await mng_ans(msg.chat.id,null))[0].ans){
                 await set_dgid(7,msg.chat.id)
-            } else await set_dgid(8,msg.chat.id)
+            } else {
+                await set_task(msg.chat.id);
+                await set_dgid(8,msg.chat.id)}
         break;
 
         case 8:
@@ -236,11 +241,12 @@ async function ans_render(userinf,msg){
             rkeyboard = [[{text:'Да!', callback_data:'1'},{'text':'В путь!',callback_data:'1'}]] 
         break;
         case 1:
+            await set_task(userinf.tgid);
             dialogs = `Отлично!\nОтныне твое имя Капитан *${get_info('niks',userinf.name)}*!\nПеред отправкой запомни кое-что очень важное.\nДругие обитатели морей будут задавать тебе много вопросов,\nа по морскому кодексу, отвечать нужно только честно,\nиначе морской кракен потопит твой корабль.\n\nВсем всегда интересны три вещи: откуда ты прибыл, какой у тебя корабль и с каким атрибутом ты никогда не расстаешься.\n\nМы прибыли из страны: *${get_info('coun',userinf.coun)}*,\nна корабле: *${get_info('ship',userinf.ship)}*,\nа самый главный атрибут капитана нашего корабля - *${get_info('attr',userinf.attr)}*.\n\nЕсли что, я всегда могу напомнить, только попроси меня об этом. Напиши в чат /me \n\nВсе запомнил?`
             rkeyboard = [[{text:'Да!', callback_data:'2'}]]  
         break;
         case 2:
-            await set_task(userinf.tgid);
+            
             dialogs = `Поднять паруса! В путь!\n\nУра, вижу сушу! Вот и первая точка нашего маршрута - Остров Золотых Песков.\n\nОтдать швартовые!\nЧто ж, капитан *${get_info('niks',userinf.name)}*, карта сокровищ привела нас сюда, но мы тут явно не одни…\nЯ слышал об этом человеке.\nЭто капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*!\n\nЕго знают, как отличного штурмана, у него есть особая чуйка на сокровища, его помощь нам бы пригодилась.\nИнтересно, какой у него корабль?\nСможешь узнать?`
             rkeyboard = [[{text:'Сейчас узнаю!', callback_data:'3'}]]  
         break;
@@ -274,7 +280,9 @@ async function ans_render(userinf,msg){
                 rkeyboard = [[{text:'Узнаю у него!', callback_data:2}]] 
             }
         break;
+        
         case 5:
+            
             lives(userinf.tgid,2)
             dialogs = `Этот остров не принес нам долгожданных сокровищ, но зато Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}* подсказал нам, куда надо двигаться дальше за следующей подсказкой.\n\nСледуем на Облачный Мыс! Как быстро мы оказались на месте.\n\nО, а мы тут снова не одни.\nЕсть легенда, что для того, чтобы узнать подсказку, нужно поздороваться с Хранителем Облачного Мыса на нескольких языках.\n\nДавай узнаем у капитанов, откуда они и все вместе скажем "Привет"!`
             rkeyboard = [[{text:'Отлично!', callback_data:6}]]
@@ -284,7 +292,6 @@ async function ans_render(userinf,msg){
             rkeyboard = [[{text:'Дай его контакты!', callback_data:6}]] 
         break;
         case 6:
-            await set_task(userinf.tgid);
             var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).coun)
             await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
             ship = shuffle(ship)
@@ -313,7 +320,7 @@ async function ans_render(userinf,msg){
             }
             break;
         case 8:
-            await set_task(userinf.tgid);
+            //wait set_task(userinf.tgid);
             var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).coun)
             await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
             ship = shuffle(ship)
@@ -351,11 +358,12 @@ async function ans_render(userinf,msg){
             rkeyboard = [[{text:'Поднять паруса!', callback_data:11}]] 
         break;
         case 11:
+            await set_task(userinf.tgid);
             dialogs = `Вот мы и на месте.\nИ снова мы тут не одни… Думаю, нам нужно объединиться, чтобы достичь цели.\n\nСмотри, там табличка: "Чтобы получить сокровище, нужно положить на этот камень то, с чем вы никогда не расстаетесь и тогда сокровище будет ваше!\n\nСокровища получат четверо смельчаков!`
             rkeyboard = [[{text:'Получить задачу!', callback_data:12}]] 
         break;
         case 12:
-            await set_task(userinf.tgid);
+            //await set_task(userinf.tgid);
             var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
             await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
             ship = shuffle(ship)
@@ -388,11 +396,12 @@ async function ans_render(userinf,msg){
             }
         break;
         case 14:
+            await set_task(userinf.tgid);
             dialogs = `Отлично, один есть!`
             rkeyboard = [[{text:'Найти следующего!', callback_data:15}]]
         break;
         case 15:
-            await set_task(userinf.tgid);
+            //await set_task(userinf.tgid);
             var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
             await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
             ship = shuffle(ship)
@@ -425,11 +434,12 @@ async function ans_render(userinf,msg){
             }
         break;        
         case 17:
+            await set_task(userinf.tgid);
             dialogs = `Осталось последнее задание!`
             rkeyboard = [[{text:'Приступить!', callback_data:18}]] 
         break;
         case 18:
-            await set_task(userinf.tgid);
+            //await set_task(userinf.tgid);
             var ship = get_unic_arr((await get_user_info_by_id(userinf.task)).attr)
             await mng_ans(userinf.tgid,ship[1],ship[2],ship[3],ship[0])
             ship = shuffle(ship)
