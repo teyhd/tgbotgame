@@ -88,7 +88,7 @@ async function mng_ans(tgid,a1=null,a2,a3,ans){
     return rows;
 }
 
-async function lives(tgid,lives=null){
+async function lives(tgid,lives=null){р
     let qer = `SELECT lives from tasks WHERE tgid=${tgid}`
     if (lives!=null){
         qer = `UPDATE tasks SET lives=${lives} WHERE tgid=${tgid};` 
@@ -259,7 +259,7 @@ async function ans_render(userinf,msg){
             ship = shuffle(ship)
             
             console.log(ship);
-            dialogs = `Задание №1: Узнай какой корабль у Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nНайди его скорее и напиши мне ответ.\nУ тебя есть только две попытки!\n\n\n*${get_info('ship',(await get_user_info_by_id(userinf.task)).ship)}*`
+            dialogs = `Задание №1: Узнай какой корабль у Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nНайди его скорее и напиши мне ответ.\nУ тебя есть только две попытки!`
             rkeyboard = [[{text:get_info('ship',ship[0]), callback_data:ship[0]},{text:get_info('ship',ship[1]),callback_data:ship[1]}],[{text:get_info('ship',ship[2]), callback_data:ship[2]},{text:get_info('ship',ship[3]),callback_data:ship[3]}]] 
         break;
         case 4:
@@ -298,7 +298,7 @@ async function ans_render(userinf,msg){
             ship = shuffle(ship)
             
             console.log(ship);
-            dialogs = `Задание №2: Узнай из какой страны прибыл Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!\n\n\n*${get_info('coun',(await get_user_info_by_id(userinf.task)).coun)}*`
+            dialogs = `Задание №2: Узнай из какой страны прибыл Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!`
             rkeyboard = [[{text:get_info('coun',ship[0]), callback_data:ship[0]},{text:get_info('coun',ship[1]),callback_data:ship[1]}],[{text:get_info('coun',ship[2]), callback_data:ship[2]},{text:get_info('coun',ship[3]),callback_data:ship[3]}]] 
             break;
         case 7:
@@ -370,7 +370,7 @@ async function ans_render(userinf,msg){
             ship = shuffle(ship)
             
             console.log(ship);
-            dialogs = `Задание №4: Хм… Что ж, значит нам нужно найти еще трех Капитанов у которых есть что-то, с чем они не расстаются никогда…\n\nСпросишь у Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            dialogs = `Задание №4: Хм… Что ж, значит нам нужно найти еще трех Капитанов у которых есть что-то, с чем они не расстаются никогда…\n\nСпросишь у Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\n\nУ тебя есть только две попытки!`
             rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
             break;
         case 121:
@@ -408,7 +408,7 @@ async function ans_render(userinf,msg){
             ship = shuffle(ship)
             
             console.log(ship);
-            dialogs = `Задание №5: Я вижу Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nCпросишь теперь у него?\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            dialogs = `Задание №5: Я вижу Капитана *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nCпросишь теперь у него?\n\nУ тебя есть только две попытки!`
             rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
             break;
         case 151:
@@ -446,7 +446,7 @@ async function ans_render(userinf,msg){
             ship = shuffle(ship)
             
             console.log(ship);
-            dialogs = `Задание №6: О, мой добрый друг Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nОн точно ответит и мы получим сокровища!\n\nУ тебя есть только две попытки!\n\n\n*${get_info('attr',(await get_user_info_by_id(userinf.task)).attr)}*`
+            dialogs = `Задание №6: О, мой добрый друг Капитан *${get_info('niks',(await get_user_info_by_id(userinf.task)).name)}*.\nОн точно ответит и мы получим сокровища!\n\nУ тебя есть только две попытки!`
             rkeyboard = [[{text:get_info('attr',ship[0]), callback_data:ship[0]},{text:get_info('attr',ship[1]),callback_data:ship[1]}],[{text:get_info('attr',ship[2]), callback_data:ship[2]},{text:get_info('attr',ship[3]),callback_data:ship[3]}]] 
             break;
         case 181:
